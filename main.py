@@ -59,9 +59,11 @@ def main(tableauResolution=None, tableauIndice=None):
             if tableauResolution[i][j] == 0:
                 tableauResolution[i][j] = random.randint(1, 9)
     printResultat(tableauResolution)
+    printPrettyResultat([tableauResolution, tableauIndice])
     print(getConstraints(2, 2, [tableauResolution, tableauIndice]))
     voisiny = voisin([tableauResolution, tableauIndice])
     printResultat(voisiny[0])
+    printPrettyResultat(voisiny)
     start_time = time.time()
     res = recuit([tableauResolution, tableauIndice])
     stop_time = time.time() - start_time
@@ -236,6 +238,31 @@ def printResultat(tableau):
             else:
                 output = output + " □ "
         output = output + "\n"
+    print(output)
+
+
+def printPrettyResultat(arr):
+    output = ""
+    tableau = arr[0]
+    indices = arr[1]
+
+    for i in range(tailleGrille):
+        for j in range(tailleGrille):
+            if tableau[i][j] != "vide":
+                value = str(tableau[i][j])
+                if tableau[i][j] < 10:
+                    value = "0" + value
+                output = output + "   " + value + "  "
+            else:
+                indOne = str(indices[i][j][0])
+                indTwo = str(indices[i][j][1])
+                if indices[i][j][0] < 10:
+                    indOne = "0" + indOne
+                if indices[i][j][1] < 10:
+                    indTwo = "0" + indTwo
+                output = output + "|" + indOne + "." + indTwo + "|"
+        output = output + "\n"
+    print("[↓→]")
     print(output)
 
 
