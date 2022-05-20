@@ -2,6 +2,15 @@ import math
 import random
 import time
 
+wrongMask = [
+    ["", "", "", "", "", ""],
+    ["", "", "", "", "", ""],
+    ["", "", "", "", "", ""],
+    ["", "", "", "", "", ""],
+    ["", "", "", "", "", ""],
+    ["", "", "", "", "", ""]
+]
+
 
 def main(tableauResolution=None, tableauIndice=None):
     global tailleGrille
@@ -25,6 +34,14 @@ def main(tableauResolution=None, tableauIndice=None):
             ["vide", "vide", "vide", 0, 0, "vide"],
             ["vide", "vide", "vide", "vide", "vide", "vide"]
         ]
+        """tableauResolution = [    #tableau valide
+            ["vide", "vide", "vide", "vide", "vide", "vide"],
+            ["vide", 2, 1, "vide", "vide", "vide"],
+            ["vide", 2, 2, 13, "vide", "vide"],
+            ["vide", "vide", 6, 9, 3, "vide"],
+            ["vide", "vide", "vide", 2, 14, "vide"],
+            ["vide", "vide", "vide", "vide", "vide", "vide"]
+        ]"""
     if easy:
         tailleGrille = 11  # contrainte [bas, droite]
         tableauIndice = [
@@ -64,6 +81,7 @@ def main(tableauResolution=None, tableauIndice=None):
                 decompositions = getDecompositionHaut([tableauResolution, tableauIndice], i, j)
                 for h in range(len(decompositions[0])):                                                 # on remet la décomposition dans les bonnes cases en hauteur
                     tableauResolution[decompositions[1] + h][decompositions[2]] = decompositions[0][h]
+    F([tableauResolution, tableauIndice])
     printResultat(tableauResolution)
     printPrettyResultat([tableauResolution, tableauIndice])
     """voisiny = voisin([tableauResolution, tableauIndice])
@@ -72,8 +90,9 @@ def main(tableauResolution=None, tableauIndice=None):
     start_time = time.time()
     res = recuit([tableauResolution, tableauIndice])
     stop_time = time.time() - start_time
-    printPrettyResultat(res)
+    F(res)
     printResultat(res[0])
+    printPrettyResultat(res)
     print(F(res), ' contraintes non respectées')
     print("temps  : ", stop_time, "s")
 
@@ -82,20 +101,20 @@ def recuit(X0):
     X = X0
     T = 1000  # plus c'est haut plus longtemps on peut remonter la courbe (diminue au fur et à mesure)
     Nt = 100  # nb d'itération
-    while F(X) != 2:
+    while F(X) != 0:
+        if(T < 0.01):           #on reset la température si on arrive pas a trouver une solution
+            T = 5000
         for i in range(0, Nt):
             Y = voisin(X)
             dF = F(Y) - F(X)
             if accept(dF, T):
                 X = Y
         T = decroissance(T)
-        print(T)
-        print(F(X))
     return X
 
 
 def decroissance(T):
-    value = (T - (T / 50) * 2)
+    value = T*0.8#(T - (T / 50) * 2)            #TODO a affiner
     return value
 
 
@@ -205,9 +224,12 @@ def F(x):  # calcul combien de contraintes son non satisfaites
 def isBadCalcul(tableau, i, j):
     nbMauvais = 0
     indices = tableau[1][i][j]
-    if indices[0] != 0:
+    if indices[0] != 0:     #on regarde le calcul de la contrainte du haut
         calcul = 0
-        it = j - 1
+        if j == 1:          #évite un bug sur la première contrainte de starter
+            it = j
+        else:
+            it = j - 1
         pos = tableau[0][it][j]
         while pos != "vide":
             calcul += pos
@@ -217,7 +239,10 @@ def isBadCalcul(tableau, i, j):
             else:
                 pos = tableau[0][it][j]
         if calcul != indices[0]:
+            wrongMask[i][j] = "B"           # mets la contrainte en surlignée pour l'affichage
             nbMauvais = nbMauvais + 1
+        else:
+            wrongMask[i][j] = ""
     if indices[1] != 0:
         calcul = 0
         it = j + 1
@@ -230,7 +255,10 @@ def isBadCalcul(tableau, i, j):
             else:
                 pos = tableau[0][i][it]
         if calcul != indices[1]:
+            wrongMask[i][j] = "B"           # mets la contrainte en surlignée pour l'affichage
             nbMauvais = nbMauvais + 1
+        else:
+            wrongMask[i][j] = ""
     return nbMauvais
 
 
@@ -262,19 +290,23 @@ def printPrettyResultat(arr):       # print le tableau avec les indices
 
     for i in range(tailleGrille):
         for j in range(tailleGrille):
-            if tableau[i][j] != "vide":
+            if tableau[i][j] != "vide":         # c'est une case valeur
                 value = str(tableau[i][j])
                 if tableau[i][j] < 10:
                     value = "0" + value
                 output = output + "   " + value + "  "
-            else:
+            else:                               # c'est une case indice
+                RESET = '\033[0m'
+                RED = ""
+                if wrongMask[i][j] != "":
+                    RED = '\033[91m'
                 indOne = str(indices[i][j][0])
                 indTwo = str(indices[i][j][1])
                 if indices[i][j][0] < 10:
                     indOne = "0" + indOne
                 if indices[i][j][1] < 10:
                     indTwo = "0" + indTwo
-                output = output + "|" + indOne + "." + indTwo + "|"
+                output = output + "|" + RED + indOne + "." + indTwo + RESET + "|"
         output = output + "\n"
     print("[↓→]")
     print(output)
