@@ -54,20 +54,26 @@ def main(tableauResolution=None, tableauIndice=None):
             ["vide", 0, 0, "vide", 0, 0, "vide", 0, 0, 0, 0, "vide"],
             ["vide", 0, 0, 0, 0, 0, 0, 0, "vide", 0, 0, 0],
             ["vide", "vide", 0, 0, "vide", "vide", 0, 0, "vide", "vide", 0, 0]]
+    """for i in range(tailleGrille):
+        for j in range(tailleGrille):
+            if tableauResolution[i][j] == 0:
+                tableauResolution[i][j] = random.randint(1, 9)"""
     for i in range(tailleGrille):
         for j in range(tailleGrille):
             if tableauResolution[i][j] == 0:
-                tableauResolution[i][j] = random.randint(1, 9)
+                decompositions = getDecompositionHaut([tableauResolution, tableauIndice], i, j)
+                for h in range(len(decompositions[0])):                                                 # on remet la décomposition dans les bonnes cases en hauteur
+                    tableauResolution[decompositions[1] + h][decompositions[2]] = decompositions[0][h]
     printResultat(tableauResolution)
     printPrettyResultat([tableauResolution, tableauIndice])
-    print(getConstraints(2, 2, [tableauResolution, tableauIndice]))
-    voisiny = voisin([tableauResolution, tableauIndice])
+    """voisiny = voisin([tableauResolution, tableauIndice])
     printResultat(voisiny[0])
-    printPrettyResultat(voisiny)
+    printPrettyResultat(voisiny)"""
     start_time = time.time()
     res = recuit([tableauResolution, tableauIndice])
     stop_time = time.time() - start_time
-    printResultat(res)
+    printPrettyResultat(res)
+    printResultat(res[0])
     print(F(res), ' contraintes non respectées')
     print("temps  : ", stop_time, "s")
 
@@ -76,7 +82,7 @@ def recuit(X0):
     X = X0
     T = 1000  # plus c'est haut plus longtemps on peut remonter la courbe (diminue au fur et à mesure)
     Nt = 100  # nb d'itération
-    while F(X) != 0:
+    while F(X) != 2:
         for i in range(0, Nt):
             Y = voisin(X)
             dF = F(Y) - F(X)
@@ -143,6 +149,13 @@ def getConstraints(i, j, tableau):
     return [[contrainteGauche, lengthGauche, offsetGauche, posStartGauche],
             [contrainteHaut, lengthHaut, offsetHaut, posStartHaut]]
 
+def getDecompositionHaut(tableau, i, j):
+    contraintes = getConstraints(i, j, tableau)
+    decompositions = decomposition(contraintes[1][0], contraintes[1][1])
+    startingPoint = contraintes[1][3][0]
+    endingPoint = contraintes[1][3][1]
+    return [decompositions, startingPoint, endingPoint]
+
 
 def getDecompositions(tableau, i, j):
     contraintes = getConstraints(i, j, tableau)
@@ -176,6 +189,7 @@ def decomposition(num, subNum):
             res[subSection] = random_number
             cumulSum += random_number
             break
+    res = random.sample(res, len(res))
     return res
 
 
@@ -241,7 +255,7 @@ def printResultat(tableau):
     print(output)
 
 
-def printPrettyResultat(arr):
+def printPrettyResultat(arr):       # print le tableau avec les indices
     output = ""
     tableau = arr[0]
     indices = arr[1]
