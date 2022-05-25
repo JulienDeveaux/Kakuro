@@ -8,8 +8,8 @@ def main(tableauResolution=None, tableauIndice=None):
     global wrongMask
     starter = False
     easy = False
-    exempleProf = True
-    medium = False
+    exempleProf = False
+    medium = True
     if starter:
         tailleGrille = 6  # contrainte [bas, droite]
         tableauIndice = [
@@ -22,10 +22,10 @@ def main(tableauResolution=None, tableauIndice=None):
         ]
         tableauResolution = [
             [None, None, None, None, None, None],
-            [None, 0, 0, None, None, None],
-            [None, 0, 0, 0, None, None],
-            [None, None, 0, 0, 0, None],
-            [None, None, None, 0, 0, None],
+            [None, 4, 5, None, None, None],
+            [None, 0, 6, 0, None, None],
+            [None, None, 1, 2, 3, None],
+            [None, None, None, 0, 8, None],
             [None, None, None, None, None, None]
         ]
         wrongMask = [
@@ -92,81 +92,88 @@ def main(tableauResolution=None, tableauIndice=None):
     if exempleProf:
         tailleGrille = 8
         tableauResolution = [
-            [None, None, None, None, None, None, None, None],
-            [None, 0, 0, None, None, 0, 0, 0],
-            [None, 0, 0, None, 0, 0, 0, 0],
-            [None, 0, 0, 0, 0, 0, None, None],
-            [None, None, 0, 0, None, 0, 0, None],
-            [None, None, None, 0, 0, 0, 0, 0],
-            [None, 0, 0, 0, 0, None, 0, 0],
-            [None, 0, 0, 0, None, None, 0, 0]
+            [None, None, None, None, None, None, None, None, None],
+            [None, 0, 0, None, None, 0, 0, 0, None],
+            [None, 0, 0, None, 0, 0, 0, 0, None],
+            [None, 0, 0, 0, 0, 0, None, None, None],
+            [None, None, 0, 0, None, 0, 0, None, None],
+            [None, None, None, 0, 0, 0, 0, 0, None],
+            [None, 0, 0, 0, 0, None, 0, 0, None],
+            [None, 0, 0, 0, None, None, 0, 0, None],
+            [None, None, None, None, None, None, None, None, None]
         ]
         tableauIndice = [
-            [0, [23, 0], [30, 0], 0, 0, [27, 0], [12, 0], [16, 0]],
-            [[0, 16], 0, 0, 0, [17, 24], 0, 0, 0],
-            [[0, 17], 0, 0, [15, 29], 0, 0, 0, 0],
-            [[0, 35], 0, 0, 0, 0, 0, [12, 0], 0],
-            [0, [0, 7], 0, 0, [7, 8], 0, 0, [7, 0]],
-            [0, [11, 0], [10, 16], 0, 0, 0, 0, 0],
-            [[0, 21], 0, 0, 0, 0, [0, 5], 0, 0],
-            [[0, 6], 0, 0, 0, 0, [0, 3], 0, 0]
+            [0, [23, 0], [30, 0], 0, 0, [27, 0], [12, 0], [16, 0], 0],
+            [[0, 16], 0, 0, 0, [17, 24], 0, 0, 0, 0],
+            [[0, 17], 0, 0, [15, 29], 0, 0, 0, 0, 0],
+            [[0, 35], 0, 0, 0, 0, 0, [12, 0], 0, 0],
+            [0, [0, 7], 0, 0, [7, 8], 0, 0, [7, 0], 0],
+            [0, [11, 0], [10, 16], 0, 0, 0, 0, 0, 0],
+            [[0, 21], 0, 0, 0, 0, [0, 5], 0, 0, 0],
+            [[0, 6], 0, 0, 0, 0, [0, 3], 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
         wrongMask = [
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""]
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", ""]
         ]
     if medium:
-        tailleGrille = 13
+        tailleGrille = 14
         tableauResolution = [
-            [None, None, None, None, None, None, None, None, None, None, None, None, None],
-            [None, 0, 0, None, 0, 0, 0, 0, 0, None, 0, 0, None],
-            [None, 0, 0, None, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [None, 0, 0, 0, None, 0, 0, None, 0, 0, None, 0, 0],
-            [None, None, None, 0, 0, 0, None, 0, 0, None, 0, 0, 0],
-            [None, 0, 0, 0, 0, None, None, 0, 0, None, 0, 0, None],
-            [None, 0, 0, None, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [None, 0, 0, 0, 0, 0, 0, 0, 0, 0, None, 0, 0],
-            [None, None, 0, 0, None, 0, 0, None, None, 0, 0, 0, 0],
-            [None, 0, 0, 0, None, 0, 0, None, 0, 0, 0, None, None],
-            [None, 0, 0, None, 0, 0, None, 0, 0, None, 0, 0, 0],
-            [None, 0, 0, 0, 0, 0, 0, 0, 0, 0, None, 0, 0],
-            [None, None, 0, 0, None, 0, 0, 0, 0, 0, None, 0, 0]
+            [None, None, None, None, None, None, None, None, None, None, None, None, None, None],
+            [None, 0, 0, None, 0, 0, 0, 0, 0, None, 0, 0, None, None],
+            [None, 0, 0, None, 0, 0, 0, 0, 0, 0, 0, 0, 0, None],
+            [None, 0, 0, 0, None, 0, 0, None, 0, 0, None, 0, 0, None],
+            [None, None, None, 0, 0, 0, None, 0, 0, None, 0, 0, 0, None],
+            [None, 0, 0, 0, 0, None, None, 0, 0, None, 0, 0, None, None],
+            [None, 0, 0, None, 0, 0, 0, 0, 0, 0, 0, 0, 0, None],
+            [None, 0, 0, 0, 0, 0, 0, 0, 0, 0, None, 0, 0, None],
+            [None, None, 0, 0, None, 0, 0, None, None, 0, 0, 0, 0, None],
+            [None, 0, 0, 0, None, 0, 0, None, 0, 0, 0, None, None, None],
+            [None, 0, 0, None, 0, 0, None, 0, 0, None, 0, 0, 0, None],
+            [None, 0, 0, 0, 0, 0, 0, 0, 0, 0, None, 0, 0, None],
+            [None, None, 0, 0, None, 0, 0, 0, 0, 0, None, 0, 0, None],
+            [None, None, None, None, None, None, None, None, None, None, None, None, None, None],
         ]
         tableauIndice = [
-            [0, [23, 0], [13, 0], 0, [17, 0], [27, 0], [13, 0], [3, 0], [29, 0], 0, [3, 0], [37, 0], 0],
-            [[0, 16], 0, 0, [0, 32], 0, 0, 0, 0, 0, [14, 3], 0, 0, [11, 0]],
-            [[0, 12], 0, 0, [11, 45], 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [[0, 11], 0, 0, 0, [23, 4], 0, 0, [28, 14], 0, 0, [23, 16], 0, 0],
-            [0, [7, 0], [44, 23], 0, 0, 0, [0, 7], 0, 0, [0, 10], 0, 0, 0],
-            [[0, 11], 0, 0, 0, 0, [31, 0], [29, 14], 0, 0, [10, 15], 0, 0, [13, 0]],
-            [[0, 5], 0, 0, [7, 45], 0, 0, 0, 0, 0, 0, [0, 8], 0, 0],
-            [[0, 45], 0, 0, 0, 0, 0, 0, 0, 0, 0, [22, 4], 0, 0],
-            [0, [10, 11], 0, 0, [0, 6], 0, 0, 0, [14, 12], 0, 0, 0, 0],
-            [[0, 9], 0, 0, 0, [6, 12], 0, 0, [14, 19], 0, 0, 0, [9, 0], [21, 0]],
-            [[0, 3], 0, 0, [12, 5], 0, 0, [14, 10], 0, 0, [4, 23], 0, 0, 0],
-            [[0, 45], 0, 0, 0, 0, 0, 0, 0, 0, 0, [0, 5], 0, 0],
-            [0, [0, 16], 0, 0, [0, 23], 0, 0, 0, 0, 0, [0, 11], 0, 0]
+            [0, [23, 0], [13, 0], 0, [17, 0], [27, 0], [13, 0], [3, 0], [29, 0], 0, [3, 0], [37, 0], 0, 0],
+            [[0, 16], 0, 0, [0, 32], 0, 0, 0, 0, 0, [14, 3], 0, 0, [11, 0], 0],
+            [[0, 12], 0, 0, [11, 45], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [[0, 11], 0, 0, 0, [23, 4], 0, 0, [28, 14], 0, 0, [23, 16], 0, 0, 0],
+            [0, [7, 0], [44, 23], 0, 0, 0, [0, 7], 0, 0, [0, 10], 0, 0, 0, 0],
+            [[0, 11], 0, 0, 0, 0, [31, 0], [29, 14], 0, 0, [10, 15], 0, 0, [13, 0], 0],
+            [[0, 5], 0, 0, [7, 45], 0, 0, 0, 0, 0, 0, [0, 8], 0, 0, 0],
+            [[0, 45], 0, 0, 0, 0, 0, 0, 0, 0, 0, [22, 4], 0, 0, 0],
+            [0, [10, 11], 0, 0, [0, 6], 0, 0, 0, [14, 12], 0, 0, 0, 0, 0],
+            [[0, 9], 0, 0, 0, [6, 12], 0, 0, [14, 19], 0, 0, 0, [9, 0], [21, 0], 0],
+            [[0, 3], 0, 0, [12, 5], 0, 0, [14, 10], 0, 0, [4, 23], 0, 0, 0, 0],
+            [[0, 45], 0, 0, 0, 0, 0, 0, 0, 0, 0, [0, 5], 0, 0, 0],
+            [0, [0, 16], 0, 0, [0, 23], 0, 0, 0, 0, 0, [0, 11], 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
         ]
         wrongMask = [
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
         ]
     F([tableauResolution, tableauIndice])
     printPrettyResultat([tableauResolution, tableauIndice])
@@ -222,13 +229,64 @@ def voisin(x):  # fais en sorte qu'à une position random chacune des contrainte
     while (hasZ and x[0][i][j] != 0) or x[0][i][j] is None:
         i = random.randint(0, tailleGrille - 1)
         j = random.randint(0, tailleGrille - 1)
-    decompositions = getDecompositions(x, i, j)
-    if isinstance(decompositions, list):
-        for h in range(len(decompositions[0])):
-            newX[0][decompositions[1]][decompositions[2] + h] = decompositions[0][h]
-        for h in range(len(decompositions[3])):
-            newX[0][decompositions[4] + h][decompositions[5]] = decompositions[3][h]
+
+    #find left start & contrainte
+    leftStart = j
+    pos = x[0][i][leftStart]
+    while pos is not None:
+        leftStart -= 1
+        pos = x[0][i][leftStart]
+    leftCtr = x[1][i][leftStart][1]
+
+    #find whole line length
+    lineLength = 1
+    pos = x[0][i][leftStart + lineLength]
+    while pos is not None:
+        lineLength += 1
+        pos = x[0][i][leftStart + lineLength]
+    lineLength -= 1
+
+    # pour toute la ligne on la remplis d'une façon qui satisfait toutes les contraintes si possible sinon on peut remplir quelque chose de faux
+    nbStep = 0
+    nbOk = 0                    # nombre de colonnes qui coincident bien avec la décomposition trouvée
+    while nbStep < 100 and nbOk < (lineLength/5):  # on essaye de trouver la solution avec une marge d'erreur
+        lineDecomposition = decomposition(leftCtr, lineLength)
+        nbOk = 0
+        for h in range(lineLength):
+            contrainte = getConstraintsHaut(i, leftStart + h+1, x)                  # la contrainte d'une colonne
+            colDecomposition = decomposition(contrainte[0], contrainte[1])
+            if lineDecomposition[h] == colDecomposition[contrainte[2]]:
+                nbOk += 1
+                for l in range(len(colDecomposition)):
+                    newX[0][l + contrainte[3]][leftStart+h+1] = colDecomposition[l] # on remets au bon endroit la colonne
+            else:
+                newX[0][i][leftStart + h+1] = lineDecomposition[h]                  # on remets au bon endroit la ligne
+        nbStep += 1
     return newX
+
+
+def getConstraintsHaut(i, j, tableau):
+    it = i
+    pos = tableau[0][it][j]
+    while pos is not None:  # récupère la contrainte en haut
+        it -= 1
+        pos = tableau[0][it][j]
+    contrainteHaut = tableau[1][it][j][0]
+    it += 1
+    pos = tableau[0][it][j]
+    posStartHautX = it
+    posStartHautY = j
+    lengthHaut = 0
+    while pos is not None:  # récupère la longueur du nombre demandé en haut
+        lengthHaut += 1
+        it += 1
+        if it < tailleGrille:
+            pos = tableau[0][it][j]
+        else:
+            pos = None
+
+    offsetHaut = -(posStartHautX - i)  # sur une valeur à un endroit précis
+    return [contrainteHaut, lengthHaut, offsetHaut, posStartHautX, posStartHautY]
 
 
 def getConstraints(i, j, tableau):
@@ -273,23 +331,6 @@ def getConstraints(i, j, tableau):
     offsetGauche = -(posStartGaucheY - j)  # les offsets sont utilisés pour accorder les décompositions
     offsetHaut = -(posStartHautX - i)  # sur une valeur à un endroit précis
     return [contrainteGauche, lengthGauche, offsetGauche, posStartGaucheX, posStartGaucheY, contrainteHaut, lengthHaut, offsetHaut, posStartHautX, posStartHautY]
-
-
-def getDecompositions(tableau, x, y):
-    contraintes = getConstraints(x, y, tableau)
-    decomposition1 = decomposition(contraintes[0], contraintes[1])
-    decomposition2 = decomposition(contraintes[5], contraintes[6])
-    positionDansCtr1 = contraintes[2]
-    positionDansCtr2 = contraintes[7]
-    if decomposition1[positionDansCtr1] == decomposition2[positionDansCtr2]:  # fais en sorte qu'a la position random choisie dans voisin les deux décompositions aient la même valeur
-        startingPoint1 = contraintes[3]
-        endingPoint1 = contraintes[4]
-        startingPoint2 = contraintes[8]
-        endingPoint2 = contraintes[9]
-        res = [decomposition1, startingPoint1, endingPoint1, decomposition2, startingPoint2, endingPoint2]
-    else:
-        res = None
-    return res
 
 
 def decomposition(num, subNum):
