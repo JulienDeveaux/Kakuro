@@ -8,8 +8,8 @@ def main(tableauResolution=None, tableauIndice=None):
     global wrongMask
     starter = False
     easy = False
-    exempleProf = False
-    medium = True
+    exempleProf = True
+    medium = False
     if starter:
         tailleGrille = 6  # contrainte [bas, droite]
         tableauIndice = [
@@ -178,7 +178,7 @@ def main(tableauResolution=None, tableauIndice=None):
     F([tableauResolution, tableauIndice])
     printPrettyResultat([tableauResolution, tableauIndice])
     start_time = time.time()
-    res = recuit([tableauResolution, tableauIndice])
+    res = recuit([tableauResolution, tableauIndice], 0.6)
     stop_time = time.time() - start_time
     F(res)
     printPrettyResultat(res)
@@ -186,14 +186,15 @@ def main(tableauResolution=None, tableauIndice=None):
     print("temps  : ", stop_time, "s")
 
 
-def recuit(X0):
+def recuit(X0, alpha):
     X = X0
     T = 1000  # plus c'est haut plus longtemps on peut remonter la courbe (diminue au fur et à mesure)
     Nt = 100  # nb d'itération
     prevSize = 150
+    step = 0
     prevX = [0] * prevSize
     it = 0
-    while F(X) != 0:
+    while F(X) != 0 and step < 20000:
         for i in range(0, Nt):
             Y = voisin(X)
             dF = F(Y) - F(X)
@@ -210,13 +211,38 @@ def recuit(X0):
             else:
                 it += 1
             T = decroissance(T)"""
-        T = decroissance(T)
+        step += 1
+        T = cooling_quadratic_m(1, 1000, alpha, step, 5000)
     return X
 
 
 def decroissance(T):
     value = (T - (T / 50) * 2)
     return value
+
+# linear multiplicative cooling
+def cooling_linear_m(t_min, t_max, alpha, step, step_max):
+    return t_max / (1 + alpha * step)
+
+# linear additive cooling
+def cooling_linear_a(t_min, t_max, alpha, step, step_max):
+    return t_min + (t_max - t_min) * ((step_max - step)/step_max)
+
+# quadratic multiplicative cooling
+def cooling_quadratic_m(t_min, t_max, alpha, step, step_max):
+    return t_min / (1 + alpha * step**2)
+
+# quadratic additive cooling
+def cooling_quadratic_a(t_min, t_max, alpha, step, step_max):
+    return t_min + (t_max - t_min) * ((step_max - step)/step_max)**2
+
+# exponential multiplicative cooling
+def cooling_exponential_m(t_min, t_max, alpha, step, step_max):
+    return t_max * alpha**step
+
+# logarithmical multiplicative cooling
+def cooling_logarithmic_m(t_min, t_max, alpha, step, step_max):
+    return t_max / (alpha * math.log(step + 1))
 
 
 def voisin(x):  # fais en sorte qu'à une position random chacune des contraintes associées soient respectées
@@ -421,8 +447,8 @@ def isBadCalcul(tableau, i, j):
 
 def accept(dF, T):
     if dF > 0:
-        A = math.exp(-dF / T)
-        if random.uniform(0, 1) >= A:
+        A = math.exp(-dF/T)
+        if A <= 0 or random.uniform(0, 1) >= A:
             return False
     return True
 
