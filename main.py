@@ -7,8 +7,8 @@ def main(tableauResolution=None, tableauIndice=None):
     global tailleGrille
     global wrongMask
     starter = False
-    easy = False
-    exempleProf = True
+    easy = True
+    exempleProf = False
     medium = False
     if starter:
         tailleGrille = 6  # contrainte [bas, droite]
@@ -178,7 +178,7 @@ def main(tableauResolution=None, tableauIndice=None):
     F([tableauResolution, tableauIndice])
     printPrettyResultat([tableauResolution, tableauIndice])
     start_time = time.time()
-    res = recuit([tableauResolution, tableauIndice], 0.6)
+    res = recuit([tableauResolution, tableauIndice])
     stop_time = time.time() - start_time
     F(res)
     printPrettyResultat(res)
@@ -186,7 +186,7 @@ def main(tableauResolution=None, tableauIndice=None):
     print("temps  : ", stop_time, "s")
 
 
-def recuit(X0, alpha):
+def recuit(X0):
     X = X0
     T = 1000  # plus c'est haut plus longtemps on peut remonter la courbe (diminue au fur et à mesure)
     Nt = 100  # nb d'itération
@@ -194,55 +194,19 @@ def recuit(X0, alpha):
     step = 0
     prevX = [0] * prevSize
     it = 0
-    while F(X) != 0 and step < 20000:
+    while F(X) != 0 and step < 5000:
         for i in range(0, Nt):
             Y = voisin(X)
             dF = F(Y) - F(X)
             if accept(dF, T):
                 X = Y
-        """if all((x != 0 and x == prevX[0]) for x in prevX):
-            T += 0.4
-            prevX = [0] * prevSize
-            print(F(X))
-        else:
-            prevX[it] = F(X)
-            if it == prevSize - 1:
-                it = 0
-            else:
-                it += 1
-            T = decroissance(T)"""
         step += 1
-        T = cooling_quadratic_m(1, 1000, alpha, step, 5000)
+        T = decroissance(1, step)
     return X
 
 
-def decroissance(T):
-    value = (T - (T / 50) * 2)
-    return value
-
-# linear multiplicative cooling
-def cooling_linear_m(t_min, t_max, alpha, step, step_max):
-    return t_max / (1 + alpha * step)
-
-# linear additive cooling
-def cooling_linear_a(t_min, t_max, alpha, step, step_max):
-    return t_min + (t_max - t_min) * ((step_max - step)/step_max)
-
-# quadratic multiplicative cooling
-def cooling_quadratic_m(t_min, t_max, alpha, step, step_max):
-    return t_min / (1 + alpha * step**2)
-
-# quadratic additive cooling
-def cooling_quadratic_a(t_min, t_max, alpha, step, step_max):
-    return t_min + (t_max - t_min) * ((step_max - step)/step_max)**2
-
-# exponential multiplicative cooling
-def cooling_exponential_m(t_min, t_max, alpha, step, step_max):
-    return t_max * alpha**step
-
-# logarithmical multiplicative cooling
-def cooling_logarithmic_m(t_min, t_max, alpha, step, step_max):
-    return t_max / (alpha * math.log(step + 1))
+def decroissance(t_min, step):
+    return t_min / (1.8 * step**2)
 
 
 def voisin(x):  # fais en sorte qu'à une position random chacune des contraintes associées soient respectées
@@ -393,7 +357,7 @@ def decomposition(num, subNum):
                 res[subSection] = random_number
                 cumulSum += random_number
                 break
-        isGood = all(9 >= i >= 1 for i in res)  # TODO do better than this
+        isGood = all(9 >= i >= 1 for i in res)  # on vérifie que la décomposition est bien entre 1 et 9
     return res
 
 
