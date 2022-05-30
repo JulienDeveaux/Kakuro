@@ -190,11 +190,8 @@ def recuit(X0):
     X = X0
     T = 1000  # plus c'est haut plus longtemps on peut remonter la courbe (diminue au fur et à mesure)
     Nt = 100  # nb d'itération
-    prevSize = 150
     step = 0
-    prevX = [0] * prevSize
-    it = 0
-    while F(X) != 0 and step < 5000:
+    while F(X) != 0:# and step < 4000:
         for i in range(0, Nt):
             Y = voisin(X)
             dF = F(Y) - F(X)
@@ -243,12 +240,18 @@ def voisin(x):  # fais en sorte qu'à une position random chacune des contrainte
         lineDecomposition = decomposition(leftCtr, lineLength)
         nbOk = 0
         for h in range(lineLength):
-            contrainte = getConstraintsHaut(i, leftStart + h+1, x)                  # la contrainte d'une colonne
-            colDecomposition = decomposition(contrainte[0], contrainte[1])
-            if lineDecomposition[h] == colDecomposition[contrainte[2]]:
+            colContrainte = getConstraintsHaut(i, leftStart + h+1, x)                  # la contrainte d'une colonne
+            colDecomposition = decomposition(colContrainte[0], colContrainte[1])
+            if lineDecomposition[h] == colDecomposition[colContrainte[2]]:
                 nbOk += 1
                 for l in range(len(colDecomposition)):
-                    newX[0][l + contrainte[3]][leftStart+h+1] = colDecomposition[l] # on remets au bon endroit la colonne
+                    if l+colContrainte[3] != colContrainte[2]:
+                        ligContrainte = getConstraintsGauche(colContrainte[3] + l, colContrainte[4], x)
+                        ligDecomposition = decomposition(ligContrainte[0], ligContrainte[1])
+                        if ligDecomposition[ligContrainte[2]] == colDecomposition[l]:
+                            for o in range(len(ligDecomposition)):
+                                newX[0][ligContrainte[3]][ligContrainte[4] + o] = ligDecomposition[o]
+                    newX[0][l + colContrainte[3]][leftStart+h+1] = colDecomposition[l] # on remets au bon endroit la colonne
             else:
                 newX[0][i][leftStart + h+1] = lineDecomposition[h]                  # on remets au bon endroit la ligne
         nbStep += 1
@@ -277,6 +280,30 @@ def getConstraintsHaut(i, j, tableau):
 
     offsetHaut = -(posStartHautX - i)  # sur une valeur à un endroit précis
     return [contrainteHaut, lengthHaut, offsetHaut, posStartHautX, posStartHautY]
+
+
+def getConstraintsGauche(i, j, tableau):
+    it = j
+    pos = tableau[0][i][it]
+    while pos is not None:  # récupère la contrainte à gauche
+        it -= 1
+        pos = tableau[0][i][it]
+    contrainteGauche = tableau[1][i][it][1]
+    it += 1
+    pos = tableau[0][i][it]
+    posStartGaucheX = i
+    posStartGaucheY = it
+    lengthGauche = 0
+    while pos is not None:  # récupère la longueur du nombre demandé en haut
+        lengthGauche += 1
+        it += 1
+        if it < tailleGrille:
+            pos = tableau[0][i][it]
+        else:
+            pos = None
+
+    offsetGauche = -(posStartGaucheY - j)  # les offsets sont utilisés pour accorder les décompositions
+    return [contrainteGauche, lengthGauche, offsetGauche, posStartGaucheX, posStartGaucheY]
 
 
 def getConstraints(i, j, tableau):
