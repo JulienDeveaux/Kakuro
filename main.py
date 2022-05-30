@@ -6,10 +6,21 @@ import time
 def main(tableauResolution=None, tableauIndice=None):
     global tailleGrille
     global wrongMask
+    choice = input("Please select your grid size choice : \n6*6 : 1\n8x8 : 2\n12*12 : 3\n15x15 : 4\ntaille de grille maximale avec un résultat garanti en mois d'une minute : 12x12\n")
     starter = False
-    easy = True
+    easy = False
     exempleProf = False
     medium = False
+
+    if choice == "1":
+        starter = True
+    if choice == "2":
+        exempleProf = True
+    if choice == "3":
+        easy = True
+    if choice == "4":
+        medium = True
+
     if starter:
         tailleGrille = 6  # contrainte [bas, droite]
         tableauIndice = [
@@ -175,12 +186,11 @@ def main(tableauResolution=None, tableauIndice=None):
             ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
             ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
         ]
-    F([tableauResolution, tableauIndice])
-    printPrettyResultat([tableauResolution, tableauIndice])
+    F([tableauResolution, tableauIndice])       # on exécute cette fonction pour mettre dans le mask les indices invalides
+    printPrettyResultat([tableauResolution, tableauIndice]) # on affiche la grille initiale
     start_time = time.time()
-    res = recuit([tableauResolution, tableauIndice])
+    res = recuit([tableauResolution, tableauIndice])    # on démarre le recuit
     stop_time = time.time() - start_time
-    F(res)
     printPrettyResultat(res)
     print(F(res), ' contraintes non respectées')
     print("temps  : ", stop_time, "s")
@@ -188,10 +198,10 @@ def main(tableauResolution=None, tableauIndice=None):
 
 def recuit(X0):
     X = X0
-    T = 1000  # plus c'est haut plus longtemps on peut remonter la courbe (diminue au fur et à mesure)
+    T = 1000  # température initiale
     Nt = 100  # nb d'itération
     step = 0
-    while F(X) != 0:# and step < 4000:
+    while F(X) != 0 and step < 4000:    # la limitation du step est pour limiter le temps d'exécution à moins de 2 min a peu près
         for i in range(0, Nt):
             Y = voisin(X)
             dF = F(Y) - F(X)
@@ -203,11 +213,11 @@ def recuit(X0):
 
 
 def decroissance(t_min, step):
-    return t_min / (1.8 * step**2)
+    return t_min / (1.8 * step**2)      # on diminue la température via une fonction quadratique
 
 
-def voisin(x):  # fais en sorte qu'à une position random chacune des contraintes associées soient respectées
-    newX = [[], x[1]]
+def voisin(x):  # fais en sorte qu'à une position random chacune des contraintes associées soient respectées en haut et à gauche
+    newX = [[], x[1]]       # on copie notre grille
     for i in range(tailleGrille):
         newX[0].append(x[0][i].copy())
     i = random.randint(0, tailleGrille - 1)
@@ -240,18 +250,12 @@ def voisin(x):  # fais en sorte qu'à une position random chacune des contrainte
         lineDecomposition = decomposition(leftCtr, lineLength)
         nbOk = 0
         for h in range(lineLength):
-            colContrainte = getConstraintsHaut(i, leftStart + h+1, x)                  # la contrainte d'une colonne
-            colDecomposition = decomposition(colContrainte[0], colContrainte[1])
-            if lineDecomposition[h] == colDecomposition[colContrainte[2]]:
+            contrainte = getConstraintsHaut(i, leftStart + h + 1, x)  # la contrainte d'une colonne
+            colDecomposition = decomposition(contrainte[0], contrainte[1])
+            if lineDecomposition[h] == colDecomposition[contrainte[2]]:     # si les deux contraintes on la bonne case et le bon nombre en commun
                 nbOk += 1
                 for l in range(len(colDecomposition)):
-                    if l+colContrainte[3] != colContrainte[2]:
-                        ligContrainte = getConstraintsGauche(colContrainte[3] + l, colContrainte[4], x)
-                        ligDecomposition = decomposition(ligContrainte[0], ligContrainte[1])
-                        if ligDecomposition[ligContrainte[2]] == colDecomposition[l]:
-                            for o in range(len(ligDecomposition)):
-                                newX[0][ligContrainte[3]][ligContrainte[4] + o] = ligDecomposition[o]
-                    newX[0][l + colContrainte[3]][leftStart+h+1] = colDecomposition[l] # on remets au bon endroit la colonne
+                    newX[0][l + contrainte[3]][leftStart + h + 1] = colDecomposition[l]  # on remets au bon endroit la colonne
             else:
                 newX[0][i][leftStart + h+1] = lineDecomposition[h]                  # on remets au bon endroit la ligne
         nbStep += 1
@@ -280,30 +284,6 @@ def getConstraintsHaut(i, j, tableau):
 
     offsetHaut = -(posStartHautX - i)  # sur une valeur à un endroit précis
     return [contrainteHaut, lengthHaut, offsetHaut, posStartHautX, posStartHautY]
-
-
-def getConstraintsGauche(i, j, tableau):
-    it = j
-    pos = tableau[0][i][it]
-    while pos is not None:  # récupère la contrainte à gauche
-        it -= 1
-        pos = tableau[0][i][it]
-    contrainteGauche = tableau[1][i][it][1]
-    it += 1
-    pos = tableau[0][i][it]
-    posStartGaucheX = i
-    posStartGaucheY = it
-    lengthGauche = 0
-    while pos is not None:  # récupère la longueur du nombre demandé en haut
-        lengthGauche += 1
-        it += 1
-        if it < tailleGrille:
-            pos = tableau[0][i][it]
-        else:
-            pos = None
-
-    offsetGauche = -(posStartGaucheY - j)  # les offsets sont utilisés pour accorder les décompositions
-    return [contrainteGauche, lengthGauche, offsetGauche, posStartGaucheX, posStartGaucheY]
 
 
 def getConstraints(i, j, tableau):
@@ -350,7 +330,7 @@ def getConstraints(i, j, tableau):
     return [contrainteGauche, lengthGauche, offsetGauche, posStartGaucheX, posStartGaucheY, contrainteHaut, lengthHaut, offsetHaut, posStartHautX, posStartHautY]
 
 
-def decomposition(num, subNum):
+def decomposition(num, subNum): # donne pour un nombre donné et un nombre de morceaux une décomposition avec des chiffres entre 1 et 9
     if subNum == 1:
         return num
     startNum = num
@@ -388,7 +368,7 @@ def decomposition(num, subNum):
     return res
 
 
-def F(x):  # calcul combien de contraintes son non satisfaites
+def F(x):  # calcul combien de contraintes sont non satisfaites
     energie = 0
     for i in range(0, tailleGrille):
         for j in range(0, tailleGrille):
@@ -397,7 +377,7 @@ def F(x):  # calcul combien de contraintes son non satisfaites
     return energie
 
 
-def isBadCalcul(tableau, i, j):
+def isBadCalcul(tableau, i, j): # on resgarde si pour une case la contrainte du haut et de gauche sont non violés -> si oui on ajoute 1 au compteur nbMauvais par contrainte violée
     nbMauvais = 0
     indices = tableau[1][i][j]
     if isinstance(indices, list):
@@ -444,7 +424,7 @@ def accept(dF, T):
     return True
 
 
-def hasZero(tableau):
+def hasZero(tableau):   # compte si il y a des 0 dans le tableau (valeur initiale)
     for i in range(len(tableau[0])):
         for j in range(len(tableau[0])):
             if tableau[0][i][j] == 0:
